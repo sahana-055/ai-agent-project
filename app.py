@@ -12,7 +12,7 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 def home():
     return {"message": "AI Agent is running!"}
 
-@app.post("/summarize")
+@app.get("/summarize")
 def summarize(text: str):
     prompt = f"Summarize this text in simple words:\n{text}"
     
