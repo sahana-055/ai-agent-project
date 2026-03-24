@@ -30,10 +30,14 @@ import requests
 
 @app.get("/wiki-summary")
 def wiki_summary(topic: str):
-    text = f"{topic} is an important concept in technology and science."
+    try:
+        text = f"{topic} is a concept related to technology, science, and modern innovation."
 
-    prompt = f"Summarize this:\n{text}"
+        prompt = f"Summarize this:\n{text}"
 
-    result = model.generate_content(prompt)
+        result = model.generate_content(prompt)
 
-    return {"summary": result.text}
+        return {"summary": result.text}
+
+    except Exception as e:
+        return {"summary": text[:200]}
