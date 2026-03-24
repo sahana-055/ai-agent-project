@@ -30,30 +30,10 @@ import requests
 
 @app.get("/wiki-summary")
 def wiki_summary(topic: str):
-    try:
-        url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{topic}"
-        
-        res = requests.get(url)
+    text = f"{topic} is an important concept in technology and science."
 
-        # Check status
-        if res.status_code != 200:
-            return {"error": "Wikipedia API failed"}
+    prompt = f"Summarize this:\n{text}"
 
-        data = res.json()
+    result = model.generate_content(prompt)
 
-        text = data.get("extract", "")
-
-        if not text:
-            return {"error": "No summary found"}
-
-        prompt = f"Summarize this:\n{text}"
-
-        result = model.generate_content(prompt)
-
-        if result and hasattr(result, "text"):
-            return {"summary": result.text}
-        else:
-            return {"summary": text[:200]}  # fallback
-
-    except Exception as e:
-        return {"error": str(e)}
+    return {"summary": result.text}
