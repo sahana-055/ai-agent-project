@@ -23,3 +23,19 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 10000))
     uvicorn.run(app, host="0.0.0.0", port=port)
+
+import requests
+
+@app.get("/wiki-summary")
+def wiki_summary(topic: str):
+    url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{topic}"
+    
+    response = requests.get(url).json()
+    
+    text = response.get("extract", "")
+    
+    prompt = f"Summarize this:\n{text}"
+    
+    result = model.generate_content(prompt)
+    
+    return {"summary": result.text}
