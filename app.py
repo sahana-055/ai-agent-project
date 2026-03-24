@@ -27,15 +27,21 @@ if __name__ == "__main__":
 
 @app.get("/wiki-summary")
 def wiki_summary(topic: str):
-    url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{topic}"
-    
-    response = requests.get(url).json()
-    
-    text = response.get("extract", "")
-    
-    prompt = f"Summarize this:\n{text}"
-    
-    result = model.generate_content(prompt)
-    
-    return {"summary": result.text}
+    try:
+        url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{topic}"
+        response = requests.get(url).json()
+
+        text = response.get("extract", "")
+
+        if not text:
+            return {"error": "No data found"}
+
+        prompt = f"Summarize this:\n{text}"
+
+        result = model.generate_content(prompt)
+
+        return {"summary": result.text}
+
+    except Exception as e:
+        return {"error": str(e)}
 
